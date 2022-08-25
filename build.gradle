@@ -46,6 +46,8 @@ dependencies {
 	//Rest Docs
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	//SpringSecurity 사용시 테스트에 반드시 필요 (@WithMockUser)
+	testImplementation 'org.springframework.security:spring-security-test'
 	//MapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.1.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
@@ -57,6 +59,7 @@ dependencies {
 	implementation 'com.auth0:java-jwt:3.19.2'
 	//OAuth2
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//
 }
 
 tasks.named('test') {
