@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/pre-project-setting-practice.iml" filepath="$PROJECT_DIR$/.idea/pre-project-setting-practice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pre_project.iml" filepath="$PROJECT_DIR$/.idea/modules/pre_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pre_project.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pre_project.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pre_project.test.iml" filepath="$PROJECT_DIR$/.idea/modules/pre_project.test.iml" />
     </modules>
   </component>
 </project>

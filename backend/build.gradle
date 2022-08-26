@@ -55,6 +55,8 @@ dependencies {
 	// spring-restdocs-asciidoctor 의존 라이브러리를 추가합니다.
 	// (3)에서 지정한 asciidoctorExtensions 그룹에 의존 라이브러리가 포함이 됩니다.
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	//SpringSecurity 사용시 테스트에 반드시 필요 (@WithMockUser)
+	testImplementation 'org.springframework.security:spring-security-test'
 	// MapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.1.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
