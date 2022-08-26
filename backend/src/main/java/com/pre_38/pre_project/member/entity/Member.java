@@ -26,4 +26,10 @@ public class Member {
 
     @Column(nullable = false)
     private LocalDateTime date = LocalDateTime.now();
+
+    @Builder
+    public Member(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

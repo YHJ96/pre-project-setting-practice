@@ -24,7 +24,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/login")
-    public ResponseEntity<Object> login(
+    public ResponseEntity<Object> loginMember(
             @RequestBody MemberLoginDto loginDto) {
         return new ResponseEntity<>("", HttpStatus.OK);
     }
