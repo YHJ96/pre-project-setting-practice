@@ -11,7 +11,7 @@ v1.0.0
 
 ***
 == QuestionController
-=== (2.1)게시물 불러오기
+=== (2.1 + 2.6)게시물 불러오기
 .curl-request
 include::{snippets}/get-questions/curl-request.adoc[]
 
@@ -20,6 +20,9 @@ include::{snippets}/get-questions/http-request.adoc[]
 
 .request-body
 include::{snippets}/get-questions/request-body.adoc[]
+
+.request-parameters
+include::{snippets}/get-questions/request-parameters.adoc[]
 
 .http-response
 include::{snippets}/get-questions/http-response.adoc[]
