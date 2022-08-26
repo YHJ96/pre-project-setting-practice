@@ -1,6 +1,7 @@
 package com.pre_38.pre_project.question.service;
 
 import com.pre_38.pre_project.question.entity.Question;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -10,8 +11,8 @@ import java.util.List;
 @Service
 public class QuestionService {
 
-    //요구사항 2.1
-    public List<Question> findQuestions(){
+    //요구사항 2.1 + 2.6
+    public Page<Question> findQuestions(int page, int size){
         return null;
     }
 

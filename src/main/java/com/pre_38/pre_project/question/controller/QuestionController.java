@@ -38,13 +38,15 @@ public class QuestionController {
         this. memberService = memberService;
     }
 
-    //요구사항 2.1 추 후 페이지네이션 도입하여 2.6도 구현
+    //요구사항 2.1 + 2.6
     @GetMapping
-    public ResponseEntity getQuestions(){
-        List<Question> questions = questionService.findQuestions();
+    public ResponseEntity getQuestions(@Positive @RequestParam int page,
+                                       @Positive @RequestParam int size){
+        Page<Question> pageQuestions = questionService.findQuestions(page-1,size);
+        List<Question> questions = pageQuestions.getContent();
         List<QuestionDto.response> responses = mapper.questionsToQuestionResponses(questions);
         return new ResponseEntity<>(
-                new MultiResponseDto<>(responses), HttpStatus.OK
+                new MultiResponseDto<>(responses,pageQuestions), HttpStatus.OK
         );
     }
 
