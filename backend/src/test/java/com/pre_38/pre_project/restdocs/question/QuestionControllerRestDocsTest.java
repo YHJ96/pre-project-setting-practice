@@ -72,9 +72,9 @@ public class QuestionControllerRestDocsTest {
         Question question2 = new Question(22L,"나도 모르는 제목2","나도 모르는 내용 2",2);
         Question question3 = new Question(333L,"매우 뛰어난 양질의 제목3","매우 뛰어난 양질의 정보3",333);
 
-        Member member1 = new Member(123L,"초보","123", LocalDateTime.now());
-        Member member2 = new Member(456L,"중수","abc", LocalDateTime.now());
-        Member member3 = new Member(789L,"고수","q1w2e3", LocalDateTime.now());
+        Member member1 = new Member(123L,"초보","123", "naver@naver.com",LocalDateTime.now());
+        Member member2 = new Member(456L,"중수","abc","gmail@gmail.com", LocalDateTime.now());
+        Member member3 = new Member(789L,"고수","q1w2e3", "youtube@youtube.com",LocalDateTime.now());
 
         question1.setMember(member1);
         question2.setMember(member2);
@@ -132,6 +132,7 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data[].member.name").type(JsonFieldType.STRING).description("회원 이름"),
                                         fieldWithPath("data[].member.avatar").type(JsonFieldType.STRING).description("회원 아바타"),
                                         fieldWithPath("data[].member.date").type(JsonFieldType.STRING).description("가입 날짜"),
+                                        fieldWithPath("data[].member.email").type(JsonFieldType.STRING).description("회원 이메일"),
 
                                         fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
                                         fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
@@ -149,7 +150,8 @@ public class QuestionControllerRestDocsTest {
         QuestionDto.Post post = new QuestionDto.Post("아무제목","아무내용","아무유저");
         String content = gson.toJson(post);
         QuestionDto.response responseDto =
-                new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",LocalDateTime.now()));
+                new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",
+                        "naver@naver.com",LocalDateTime.now()));
 
         given(mapper.questionPostToQuestion(Mockito.any(QuestionDto.Post.class))).willReturn(new Question());
         given(memberService.findMember(Mockito.anyString())).willReturn(new Member());
@@ -195,7 +197,8 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data.member.memberId").type(JsonFieldType.NUMBER).description("작성자 아이디"),
                                         fieldWithPath("data.member.name").type(JsonFieldType.STRING).description("작성자 닉네임"),
                                         fieldWithPath("data.member.avatar").type(JsonFieldType.STRING).description("작성자 아바타"),
-                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입 날짜")
+                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입 날짜"),
+                                        fieldWithPath("data.member.email").type(JsonFieldType.STRING).description("작성자 이메일")
                                 )
                         )
                 ));
@@ -233,7 +236,8 @@ public class QuestionControllerRestDocsTest {
         //given
         long questionId = 1L;
         QuestionDto.response responseDto =
-                new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",LocalDateTime.now()));
+                new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",
+                        "naver@naver.com",LocalDateTime.now()));
 
         given(questionService.findQuestion(Mockito.anyLong())).willReturn(new Question());
         given(mapper.questionToQuestionResponse(Mockito.any(Question.class))).willReturn(responseDto);
@@ -253,6 +257,7 @@ public class QuestionControllerRestDocsTest {
                 .andExpect(jsonPath("$.data.votes").value(responseDto.getVotes()))
                 .andExpect(jsonPath("$.data.member.name").value(responseDto.getMember().getName()))
                 .andExpect(jsonPath("$.data.member.avatar").value(responseDto.getMember().getAvatar()))
+                .andExpect(jsonPath("$.data.member.email").value(responseDto.getMember().getEmail()))
                 .andDo(document(
                         "get-question",
                         preprocessRequest(prettyPrint()),
@@ -272,7 +277,8 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data.member.memberId").type(JsonFieldType.NUMBER).description("작성자 아이디"),
                                         fieldWithPath("data.member.name").type(JsonFieldType.STRING).description("작성자 닉네임"),
                                         fieldWithPath("data.member.avatar").type(JsonFieldType.STRING).description("작성자 아바타"),
-                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입 날짜")
+                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입 날짜"),
+                                        fieldWithPath("data.member.email").type(JsonFieldType.STRING).description("작성자 이메일")
                                 )
                         )
                 ));
