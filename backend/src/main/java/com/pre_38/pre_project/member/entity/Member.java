@@ -1,5 +1,6 @@
 package com.pre_38.pre_project.member.entity;
 
+import com.pre_38.pre_project.audit.Auditable;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member {
+public class Member extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -23,7 +24,4 @@ public class Member {
 
     @Column(nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    private LocalDateTime date = LocalDateTime.now();
 }
