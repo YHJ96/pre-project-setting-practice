@@ -2,7 +2,6 @@ package com.pre_38.pre_project.restdocs.question;
 
 
 import com.google.gson.Gson;
-import com.pre_38.pre_project.PreProjectApplication;
 import com.pre_38.pre_project.member.entity.Member;
 import com.pre_38.pre_project.member.service.MemberService;
 import com.pre_38.pre_project.question.controller.QuestionController;
@@ -13,17 +12,14 @@ import com.pre_38.pre_project.question.service.QuestionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -76,9 +72,9 @@ public class QuestionControllerRestDocsTest {
         Question question2 = new Question(22L,"나도 모르는 제목2","나도 모르는 내용 2",2);
         Question question3 = new Question(333L,"매우 뛰어난 양질의 제목3","매우 뛰어난 양질의 정보3",333);
 
-        Member member1 = new Member(123L,"초보","123", "naver@naver.com");
-        Member member2 = new Member(456L,"중수","abc","gmail@gmail.com");
-        Member member3 = new Member(789L,"고수","q1w2e3", "youtube@youtube.com");
+        Member member1 = new Member(123L,"초보","123", "naver@naver.com",LocalDateTime.now());
+        Member member2 = new Member(456L,"중수","abc","gmail@gmail.com", LocalDateTime.now());
+        Member member3 = new Member(789L,"고수","q1w2e3", "youtube@youtube.com",LocalDateTime.now());
 
         question1.setMember(member1);
         question2.setMember(member2);
@@ -88,9 +84,9 @@ public class QuestionControllerRestDocsTest {
                 List.of(question1,question2,question3), PageRequest.of(page,size, Sort.by("questionId").descending()),3);
 
         List<QuestionDto.response> responses = List.of(
-                new QuestionDto.response(question1.getQuestionId(),question1.getTitle(),question1.getContent(),LocalDateTime.now(),question1.getVotes(),member1),
-                new QuestionDto.response(question2.getQuestionId(),question2.getTitle(),question2.getContent(),LocalDateTime.now(),question2.getVotes(),member2),
-                new QuestionDto.response(question3.getQuestionId(),question3.getTitle(),question3.getContent(),LocalDateTime.now(),question3.getVotes(),member3)
+                new QuestionDto.response(question1.getQuestionId(),question1.getTitle(),question1.getContent(),question1.getDate(),question1.getVotes(),member1),
+                new QuestionDto.response(question2.getQuestionId(),question2.getTitle(),question2.getContent(),question2.getDate(),question2.getVotes(),member2),
+                new QuestionDto.response(question3.getQuestionId(),question3.getTitle(),question3.getContent(),question3.getDate(),question3.getVotes(),member3)
         );
 
         given(questionService.findQuestions(Mockito.anyInt(),Mockito.anyInt())).willReturn(new PageImpl<>(List.of()));
@@ -135,7 +131,7 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data[].member.memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
                                         fieldWithPath("data[].member.name").type(JsonFieldType.STRING).description("회원 이름"),
                                         fieldWithPath("data[].member.avatar").type(JsonFieldType.STRING).description("회원 아바타"),
-                                        fieldWithPath("data[].member.date").type(JsonFieldType.STRING).description("회원 가입일"),
+                                        fieldWithPath("data[].member.date").type(JsonFieldType.STRING).description("가입 날짜"),
                                         fieldWithPath("data[].member.email").type(JsonFieldType.STRING).description("회원 이메일"),
 
                                         fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
@@ -155,8 +151,7 @@ public class QuestionControllerRestDocsTest {
         String content = gson.toJson(post);
         QuestionDto.response responseDto =
                 new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",
-                        "naver@naver.com"));
-
+                        "naver@naver.com",LocalDateTime.now()));
 
         given(mapper.questionPostToQuestion(Mockito.any(QuestionDto.Post.class))).willReturn(new Question());
         given(memberService.findMember(Mockito.anyString())).willReturn(new Member());
@@ -202,7 +197,7 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data.member.memberId").type(JsonFieldType.NUMBER).description("작성자 아이디"),
                                         fieldWithPath("data.member.name").type(JsonFieldType.STRING).description("작성자 닉네임"),
                                         fieldWithPath("data.member.avatar").type(JsonFieldType.STRING).description("작성자 아바타"),
-                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입일"),
+                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입 날짜"),
                                         fieldWithPath("data.member.email").type(JsonFieldType.STRING).description("작성자 이메일")
                                 )
                         )
@@ -242,8 +237,7 @@ public class QuestionControllerRestDocsTest {
         long questionId = 1L;
         QuestionDto.response responseDto =
                 new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",
-                        "naver@naver.com"));
-
+                        "naver@naver.com",LocalDateTime.now()));
 
         given(questionService.findQuestion(Mockito.anyLong())).willReturn(new Question());
         given(mapper.questionToQuestionResponse(Mockito.any(Question.class))).willReturn(responseDto);
@@ -283,7 +277,7 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data.member.memberId").type(JsonFieldType.NUMBER).description("작성자 아이디"),
                                         fieldWithPath("data.member.name").type(JsonFieldType.STRING).description("작성자 닉네임"),
                                         fieldWithPath("data.member.avatar").type(JsonFieldType.STRING).description("작성자 아바타"),
-                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입일"),
+                                        fieldWithPath("data.member.date").type(JsonFieldType.STRING).description("작성자 가입 날짜"),
                                         fieldWithPath("data.member.email").type(JsonFieldType.STRING).description("작성자 이메일")
                                 )
                         )
