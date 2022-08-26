@@ -157,6 +157,7 @@ public class QuestionControllerRestDocsTest {
                 new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",
                         "naver@naver.com"));
 
+
         given(mapper.questionPostToQuestion(Mockito.any(QuestionDto.Post.class))).willReturn(new Question());
         given(memberService.findMember(Mockito.anyString())).willReturn(new Member());
         given(questionService.createQuestion(Mockito.any(Question.class))).willReturn(new Question());
@@ -242,6 +243,7 @@ public class QuestionControllerRestDocsTest {
         QuestionDto.response responseDto =
                 new QuestionDto.response(1L,"아무제목","아무내용",LocalDateTime.now(),0,new Member(1L,"아무유저","1234",
                         "naver@naver.com"));
+
 
         given(questionService.findQuestion(Mockito.anyLong())).willReturn(new Question());
         given(mapper.questionToQuestionResponse(Mockito.any(Question.class))).willReturn(responseDto);
