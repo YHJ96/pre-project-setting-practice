@@ -18,8 +18,11 @@ public class Member {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String avatar;
+
+    @Column(nullable = false)
+    private String email;
 
     @Column(nullable = false)
     private LocalDateTime date = LocalDateTime.now();
