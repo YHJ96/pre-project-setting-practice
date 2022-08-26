@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -22,6 +26,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 
 import static org.mockito.Mockito.doNothing;
@@ -59,6 +65,9 @@ public class QuestionControllerRestDocsTest {
     @Test
     public void getQuestionsTest() throws Exception {
         //given
+        int page = 1;
+        int size = 10;
+
         Question question1 = new Question(1L,"아무제목1","아무내용1",0);
         Question question2 = new Question(22L,"나도 모르는 제목2","나도 모르는 내용 2",2);
         Question question3 = new Question(333L,"매우 뛰어난 양질의 제목3","매우 뛰어난 양질의 정보3",333);
@@ -71,7 +80,8 @@ public class QuestionControllerRestDocsTest {
         question2.setMember(member2);
         question3.setMember(member3);
 
-        List<Question> questions = List.of(question1,question2,question3);
+        Page<Question> pageQuestions = new PageImpl<>(
+                List.of(question1,question2,question3), PageRequest.of(page,size, Sort.by("questionId").descending()),3);
 
         List<QuestionDto.response> responses = List.of(
                 new QuestionDto.response(question1.getQuestionId(),question1.getTitle(),question1.getContent(),question1.getDate(),question1.getVotes(),member1),
@@ -79,15 +89,23 @@ public class QuestionControllerRestDocsTest {
                 new QuestionDto.response(question3.getQuestionId(),question3.getTitle(),question3.getContent(),question3.getDate(),question3.getVotes(),member3)
         );
 
-        given(questionService.findQuestions()).willReturn(questions);
+        given(questionService.findQuestions(Mockito.anyInt(),Mockito.anyInt())).willReturn(new PageImpl<>(List.of()));
         given(mapper.questionsToQuestionResponses(Mockito.anyList())).willReturn(responses);
+
+        String pages = String.valueOf(page);
+        String sizes = String.valueOf(size);
+        MultiValueMap<String,String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("page",pages);
+        queryParams.add("size",sizes);
+
 
         //when
         ResultActions actions =
                 mockMvc.perform(
                         get("/questions/")
                                 .accept(MediaType.APPLICATION_JSON)
-                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                                .params(queryParams)
+//                                .with(SecurityMockMvcRequestPostProcessors.csrf())
                 );
 
         //then
@@ -97,6 +115,10 @@ public class QuestionControllerRestDocsTest {
                         "get-questions",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("page").description("페이지"),
+                                parameterWithName("size").description("페이지당 회원 수")
+                        ),
                         responseFields(
                                 List.of(
                                         fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
@@ -109,9 +131,12 @@ public class QuestionControllerRestDocsTest {
                                         fieldWithPath("data[].member.memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
                                         fieldWithPath("data[].member.name").type(JsonFieldType.STRING).description("회원 이름"),
                                         fieldWithPath("data[].member.avatar").type(JsonFieldType.STRING).description("회원 아바타"),
-                                        fieldWithPath("data[].member.date").type(JsonFieldType.STRING).description("가입 날짜")
+                                        fieldWithPath("data[].member.date").type(JsonFieldType.STRING).description("가입 날짜"),
 
-
+                                        fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                        fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                                        fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("전체 게시글 수"),
+                                        fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 수")
                                 )
                         )
                 ));

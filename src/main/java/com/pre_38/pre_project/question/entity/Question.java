@@ -36,11 +36,6 @@ public class Question {
         this.member = member;
     }
 
-    public Question(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-
     public Question(Long questionId, String title, String content, int votes){
         this.questionId = questionId;
         this.title = title;
