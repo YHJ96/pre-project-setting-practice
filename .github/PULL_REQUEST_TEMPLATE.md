@@ -11,10 +11,10 @@ ex) Oauth 2.0을 이용해서 카카오 로그인 & 카카오 로그아웃 기�
 
 [ Issues 해결에 관한 도움을 줄 수 있는 링크나 스크린샷을 올려주세요. Issues가 없으면 지워주세요. ]
 
-# 체크리스트 
+# 체크리스트
 
-- [ ] git commit message 준수   
-Ex) docs: 파일명 파일 상태
+- [ ] git commit message 준수
+      Ex) docs: 파일명 파일 상태
 - [ ] Pull Request 대상 파일 확인
 - [ ] Branch 확인
 - [ ] Labels 확인
